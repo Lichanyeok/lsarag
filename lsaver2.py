@@ -20,11 +20,13 @@ document = text_splitter.split_documents(cleaned_pages)
 from langchain.embeddings import OpenAIEmbeddings
 from dotenv import load_dotenv
 from langchain.vectorstores import FAISS
+import streamlit as st
 import os
 
-load_dotenv()
+# load_dotenv()
 
-open_api_key = os.getenv('OPENAI_API_KEY')
+# open_api_key = os.getenv('OPENAI_API_KEY')
+os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 embeddings = OpenAIEmbeddings()
 faiss_vectorstore = FAISS.from_documents(document,embeddings)
 faiss_vectorstore.save_local("./lsa_vectorstore")
@@ -155,9 +157,11 @@ chat_chain = ConversationalRetrievalChain(
 # google 검색 체인
 from langchain.tools import Tool
 from langchain.utilities import GoogleSearchAPIWrapper
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
-load_dotenv()
+# load_dotenv()
+os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+os.environ["GOOGLE_CSE_ID"] = st.secrets["GOOGLE_CSE_ID"]
 search = GoogleSearchAPIWrapper()
 
 from langchain.prompts import PromptTemplate
@@ -175,7 +179,7 @@ summary_chain = LLMChain(llm=llm,prompt=summary_prompt)
 
 
 # 스트림릿 띄워서 체인 run
-import streamlit as st
+# import streamlit as st
 
 st.title("근로기준법 챗봇")
 query = st.text_input("궁금한 점을 입력하세요:")
